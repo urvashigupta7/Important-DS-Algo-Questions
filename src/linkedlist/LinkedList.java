@@ -206,19 +206,182 @@ public class LinkedList {
         this.tail.next = null;
 
     }
-    public void reversePR(){
-        reversePR(this.head,this.head.next);
-        Node temp=this.head;
-        this.head=this.tail;
-        this.tail=temp;
-        this.tail.next=null;
+
+    public void reversePR() {
+        reversePR(this.head, this.head.next);
+        Node temp = this.head;
+        this.head = this.tail;
+        this.tail = temp;
+        this.tail.next = null;
     }
-    private void reversePR(Node prev,Node curr){
-        if(curr==null){
+
+    private void reversePR(Node prev, Node curr) {
+        if (curr == null) {
             return;
         }
-        reversePR(prev.next,curr.next);
-        curr.next=prev;
+        reversePR(prev.next, curr.next);
+        curr.next = prev;
+    }
+
+    public void reverseDR() {
+        reverseDR(new NodeHeap(this.head), this.head, 0);
+    }
+
+    private class NodeHeap {
+        Node node;
+
+        NodeHeap(Node node) {
+            this.node = node;
+        }
+    }
+
+    private void reverseDR(NodeHeap left, Node right, int count) {
+        if (right == null) {
+            return;
+        }
+        reverseDR(left, right.next, count + 1);
+        if (count >= this.size / 2) {
+            int temp = left.node.data;
+            left.node.data = right.data;
+            right.data = temp;
+        }
+        left.node = left.node.next;
+
+
+    }
+
+    public LinkedList merge(LinkedList two) {
+        LinkedList ll = new LinkedList();
+        Node head1 = this.head;
+        Node head2 = two.head;
+        while (head1 != null && head2 != null) {
+            if (head1.data < head2.data) {
+                ll.addLast(head1.data);
+                head1 = head1.next;
+            } else {
+                ll.addLast(head2.data);
+                head2 = head2.next;
+            }
+        }
+        while (head1 != null) {
+            ll.addLast(head1.data);
+            head1 = head1.next;
+        }
+        while (head2 != null) {
+            ll.addLast(head2.data);
+            head2 = head2.next;
+        }
+        return ll;
+    }
+
+    private Node getMidNode() {
+        if (this.head == null) {
+            return null;
+        }
+        Node slow = this.head;
+        Node fast = this.head;
+        while (fast.next != null && fast.next.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        return slow;
+    }
+
+    public int getMidData() {
+        return getMidNode().data;
+    }
+
+    public LinkedList mergesort() throws Exception {
+        if (this.size == 1) {
+            return this;
+        }
+        int mid = (this.size / 2);
+        Node midnode = this.getMidNode();
+        Node midnext = midnode.next;
+        LinkedList first = new LinkedList();
+        LinkedList second = new LinkedList();
+        first.head = this.head;
+        first.tail = midnode;
+        first.tail.next = null;
+        first.size = (this.size + 1) / 2;
+        second.head = midnext;
+        second.tail = this.tail;
+        second.tail.next = null;
+        second.size = (this.size) / 2;
+        LinkedList lh = first.mergesort();
+        LinkedList rh = second.mergesort();
+        LinkedList me = lh.merge(rh);
+        return me;
+    }
+
+    public void bubblesort() {
+        bubblesort(this.head, this.head);
+    }
+
+    private void bubblesort(Node i, Node j) {
+        if (j.next == null) {
+            return;
+        } else if (i.next == null) {
+            bubblesort(this.head, j.next);
+            return;
+        } else if (i.data > i.next.data) {
+            int temp = i.data;
+            i.data = i.next.data;
+            i.next.data = temp;
+        }
+        bubblesort(i.next, j);
+    }
+
+    public void selectionsort() {
+        selectionsort(this.head, this.head.next);
+    }
+
+    private void selectionsort(Node i, Node j) {
+        if (i.next == null) {
+            return;
+        }
+        if (j == null) {
+            selectionsort(i.next, i.next.next);
+            return;
+        }
+        if (i.data > j.data) {
+            int temp = i.data;
+            i.data = j.data;
+            j.data = temp;
+        }
+        selectionsort(i, j.next);
+    }
+
+    public void bubblesort2() {
+        Node n1 = this.head;
+        for (int i = 0; i < this.size - 1; i++) {
+            for (int j = 0; j < this.size - 1 - i; j++) {
+                if (n1.data > n1.next.data) {
+                    int temp = n1.data;
+                    n1.data = n1.next.data;
+                    n1.next.data = temp;
+                }
+                n1 = n1.next;
+            }
+            n1 = this.head;
+        }
+    }
+
+    public void selectionsort2() {
+        Node n1 = this.head;
+        Node n2;
+        for (int i = 0; i < this.size; i++) {
+            n2 = n1.next;
+            for (int j = i + 1; j < this.size; j++) {
+                if (n1.data > n2.data) {
+                    int temp = n1.data;
+                    n1.data = n2.data;
+                    n2.data = temp;
+                }
+                n2 = n2.next;
+            }
+            n1 = n1.next;
+        }
     }
 
 }

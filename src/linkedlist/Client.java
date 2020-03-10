@@ -7,7 +7,17 @@ public class Client {
         ll.addLast(25);
         ll.addAt(1,26);
         System.out.println(ll);
-        ll.reversePR();
+        ll.reverseDR();
         System.out.println(ll);
+        LinkedList ll4=new LinkedList();
+        ll4.addLast(10);
+        ll4.addLast(1);
+        ll4.addLast(6);
+        ll4.addLast(-1);
+        ll4.addLast(8);
+        ll4.addLast(3);
+        System.out.println(ll4.getMidData());
+        ll4.selectionsort2();
+        System.out.println(ll4);
     }
 }
