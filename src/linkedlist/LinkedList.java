@@ -384,4 +384,79 @@ public class LinkedList {
         }
     }
 
+    public boolean isPalindrome() {
+        return isPalindrome(new NodeHeap(this.head), this.head);
+    }
+
+    private boolean isPalindrome(NodeHeap left, Node right) {
+        if (right == null) {
+            return true;
+        }
+        boolean recresult = isPalindrome(left, right.next);
+        if (left.node.data != right.data) {
+            return false;
+        }
+        left.node = left.node.next;
+        return recresult;
+    }
+
+    public void evenAfterOdd() {
+        Node ptr = this.head;
+        int counteven = 0;
+        while (ptr != null) {
+            if (ptr.data % 2 == 0) {
+                counteven++;
+            }
+            ptr = ptr.next;
+        }
+        int i = 0;
+        Node prev = this.head;
+        Node curr = prev.next;
+        while (i < counteven) {
+            if (curr.data % 2 == 0) {
+                prev.next = curr.next;
+                this.tail.next = curr;
+                this.tail = curr;
+                this.tail.next = null;
+                curr = prev.next;
+                i++;
+            } else {
+                prev = prev.next;
+                curr = curr.next;
+            }
+        }
+        if (this.head.data % 2 == 0) {
+            Node newhead = this.head.next;
+            this.tail.next = this.head;
+            this.tail = this.head;
+            this.tail.next = null;
+            this.head = newhead;
+        }
+    }
+
+    public void reverseInGroup(int k) {
+        Node node = reverseInGroup(this.head, k);
+        this.head=node;
+    }
+
+    private Node reverseInGroup(Node head, int k) {
+        Node prev = head;
+        Node curr = prev.next;
+        int i = 1;
+        while (curr != null && i < k) {
+            Node temp = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = temp;
+            i++;
+        }
+        if (curr != null) {
+            head.next = reverseInGroup(curr, k);
+        } else {
+            head.next = null;
+            this.tail = head;
+        }
+        return prev;
+    }
+
 }
