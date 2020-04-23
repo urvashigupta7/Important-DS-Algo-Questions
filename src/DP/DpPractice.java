@@ -17,6 +17,9 @@ public class DpPractice {
         int [][]lcsStore=new int[str1.length()+1][str2.length()+1];
         System.out.println(lcsrs(lcsStore,str1,str2));
         System.out.println(lcsi(str1,str2));
+        int hval[] = {6, 7, 1, 3, 8, 2, 4};
+        int []st=new int[hval.length+1];
+        System.out.println(maxLoot(hval,0,st));
     }
     public static int fibrs(int []str,int n){
         if(n==0){
@@ -123,5 +126,16 @@ public class DpPractice {
             }
         }
         return lcsStore[0][0];
+    }
+    public  static  int maxLoot(int []a,int i,int []st){
+        if(i>=a.length){
+            return 0;
+        }
+        if(st[i]!=0){
+            return st[i];
+        }
+        int rv= Math.max(maxLoot(a,i+1,st),a[i]+maxLoot(a,i+2,st));
+        st[i]=rv;
+        return rv;
     }
 }
