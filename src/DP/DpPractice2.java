@@ -29,6 +29,20 @@ public class DpPractice2 {
         int []wt={4,5,1};
         int []val={1 ,2 ,3,};
         System.out.println(Knapsack(wt,val,4,wt.length, new int[wt.length+1][5]));
+        String str1="geeksforgeeks";
+        System.out.println(longestPalindrSubs(str1,0,str1.length()-1));
+        System.out.println(longestPalindrSubsI(str1));
+        System.out.println(eggdrop(2,10));
+        System.out.println(eggdroprs(2,10,new int[3][11]));
+        int []m={1,2,3,4,3};
+        System.out.println(mcm(m,1,m.length-1));
+        int [][]tdp=new int[m.length+1][m.length+1];
+        for(int i=0;i<m.length+1;i++){
+            for(int j=0;j<m.length+1;j++){
+                tdp[i][j]=-1;
+            }
+        }
+        System.out.println(mcmrs(m,1,m.length-1,tdp));
     }
     public  static  int count(char []d,int n,int []store){
         if(n==0||n==1){
@@ -250,5 +264,91 @@ public class DpPractice2 {
         int ans= Math.max(Knapsack(wt,val,w,n-1,store),val[n-1]+Knapsack(wt,val,w-wt[n-1],n-1,store));
         store[n][w]=ans;
         return ans;
+    }
+    public static int longestPalindrSubs(String str1,int i,int j){
+        if(i==j){
+            return 1;
+        }
+        if((i+1==j)&&str1.charAt(i)==str1.charAt(j)){
+            return 2;
+        }
+        if(str1.charAt(i)==str1.charAt(j)){
+            return longestPalindrSubs(str1,i+1,j-1)+2;
+        }
+        else{
+            return Math.max(longestPalindrSubs(str1,i+1,j),longestPalindrSubs(str1,i,j-1));
+        }
+    }
+    public static  int longestPalindrSubsI(String str1){
+        int [][]store=new int[str1.length()][str1.length()];
+        for(int i=0;i<str1.length();i++){
+            store[i][i]=1;
+        }
+        for(int l=2;l<= str1.length();l++){
+            for(int i=0;i<str1.length()-l+1;i++){
+                int j=i+l-1;
+                if (str1.charAt(i) == str1.charAt(j) && l == 2)
+                    store[i][j] = 2;
+                else if (str1.charAt(i) == str1.charAt(j))
+                    store[i][j] = store[i+1][j-1] + 2;
+                else
+                    store[i][j] = Math.max(store[i][j-1], store[i+1][j]);
+            }
+        }
+        return store[0][str1.length()-1];
+    }
+    public static int eggdrop(int n,int k){
+        if(k==0||k==1){
+            return 1;
+        }
+        if(n==1){
+            return k;
+        }
+        int min=Integer.MAX_VALUE;
+        for(int i=1;i<=k;i++){
+            min=Math.min(min,Math.max(eggdrop(n-1,i-1),eggdrop(n,k-i))+1);
+        }
+        return min;
+    }
+    public static int eggdroprs(int n,int k,int [][]store){
+        if(k==0||k==1){
+            return 1;
+        }
+        if(n==1){
+            return k;
+        }
+        if(store[n][k]!=0){
+            return store[n][k];
+        }
+        int ans=Integer.MAX_VALUE;
+        for(int i=1;i<=k;i++){
+           ans=Math.min(ans,Math.max(eggdroprs(n-1,i-1,store),eggdroprs(n,k-i,store))+1);
+        }
+        store[n][k]=ans;
+        return ans;
+    }
+    public static int mcm(int []m,int i,int j){
+        if(i==j){
+            return 0;
+        }
+        int ans=Integer.MAX_VALUE;
+        for(int k=i;k<j;k++){
+            ans=Math.min(ans,mcm(m,i,k)+mcm(m,k+1,j)+m[i-1]*m[k]*m[j]);
+        }
+        return ans;
+    }
+    public static int mcmrs(int []m,int i,int j,int[][]tdp){
+        if(i==j){
+            return 0;
+        }
+        int ans=Integer.MAX_VALUE;
+        if(tdp[i][j]!=-1){
+            return tdp[i][j];
+        }
+        for(int k=i;k<j;k++){
+            ans=Math.min(ans,mcm(m,i,k)+mcm(m,k+1,j)+m[i-1]*m[k]*m[j]);
+        }
+        tdp[i][j]=ans;
+        return tdp[i][j];
     }
 }
