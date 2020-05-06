@@ -20,6 +20,8 @@ public class Client {
         bt.inorderI();
         System.out.println(bt.diameter());
         System.out.println(bt.diameterBtr());
-
+        bt.levelOrderLW();
+        bt.zigzag();
+        System.out.println(bt.lca(40,50));
     }
 }
