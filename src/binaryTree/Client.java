@@ -23,5 +23,7 @@ public class Client {
         bt.levelOrderLW();
         bt.zigzag();
         System.out.println(bt.lca(40,50));
+        bt.replaceWgSum();
+        System.out.println(bt);
     }
 }

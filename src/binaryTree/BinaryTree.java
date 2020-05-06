@@ -333,7 +333,6 @@ public class BinaryTree {
             mr.isBalanced = left.isBalanced && right.isBalanced;
         }
         return mr;
-
     }
 
     private class Composite {
@@ -460,4 +459,131 @@ public class BinaryTree {
             return node;
         }
     }
+    public void removeleaves(){
+        removeleaves(this.root);
+    }
+    private void removeleaves(Node node){
+        if(node==null){
+            return;
+        }
+        if(node.left.left==null&&node.left.right==null){
+            node.left=null;
+        }
+        if(node.right.left==null&&node.right.right==null){
+            node.right=null;
+        }
+        removeleaves(node.left);
+        removeleaves(node.right);
+    }
+    private class LargestBSTHelper{
+        int min;
+        int max;
+        int size;
+        boolean isBST;
+        int ans;
+    }
+    public int largestBSTHelper(){
+        return largestBSTHelper(this.root).ans;
+    }
+    private LargestBSTHelper largestBSTHelper(Node node){
+        if(node==null){
+           LargestBSTHelper l=new LargestBSTHelper();
+           l.min=Integer.MAX_VALUE;
+           l.max=Integer.MIN_VALUE;
+           l.size=0;
+           l.ans=0;
+           l.isBST=true;
+           return l;
+        }
+        LargestBSTHelper left=largestBSTHelper(node.left);
+        LargestBSTHelper right=largestBSTHelper(node.right);
+        LargestBSTHelper mr=new LargestBSTHelper();
+        mr.min=Math.min(left.min,Math.max(right.min,node.data));
+        mr.max=Math.max(left.max,Math.max(right.max,node.data));
+        mr.size=left.size+right.size+1;
+        if(left.isBST&&right.isBST&&node.data>left.max &&node.data<right.min){
+          mr.isBST=true;
+          mr.ans=mr.size;
+        }else {
+           mr.isBST=false;
+           mr.ans=Math.max(left.ans,right.ans);
+        }
+        return mr;
+    }
+    public void replaceWgSum(){
+        replaceWgSum(this.root,new Sum());
+    }
+    private void  replaceWgSum(Node node,Sum sum){
+        if(node==null){
+            return;
+        }
+        replaceWgSum(node.right,sum);
+        int temp=node.data;
+        node.data+=sum.sum;
+        sum.sum+=temp;
+        replaceWgSum(node.left,sum);
+
+    }
+    private class Sum{
+        int sum;
+    }
+    private void printKdown(Node node, int k) {
+
+        if (node == null) {
+            return;
+        }
+
+        if (k == 0) {
+            System.out.println(node.data);
+            return;
+        }
+
+        printKdown(node.left, k - 1);
+        printKdown(node.right, k - 1);
+    }
+    public void printKfar(int target, int k) {
+        printKfar(root, target, k);
+
+    }
+
+    private int printKfar(Node node, int target, int k) {
+        if (node == null) {
+            return -1;
+        }
+
+
+        if (node.data == target) {
+            printKdown(node, k);
+            return 0;
+        }
+
+        int dl = printKfar(node.left, target, k);
+
+        if (dl != -1) {
+            if (dl + 1 == k) {
+                System.out.println(node.data);
+            } else {
+                printKdown(node.right, k - (dl + 2));
+            }
+
+            return dl + 1;
+        }
+
+        int dr = printKfar(node.right, target, k);
+
+        if (dr != -1) {
+            if (dr + 1 == k) {
+                System.out.println(node.data);
+            } else {
+                printKdown(node.left, k - (dr + 2));
+            }
+
+            return dr + 1;
+        }
+
+        return -1;
+    }
+
+
+
 }
