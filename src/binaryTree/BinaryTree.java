@@ -24,6 +24,50 @@ public class BinaryTree {
         Scanner scrn = new Scanner(System.in);
         this.root = construct(scrn, true, null);
     }
+    public BinaryTree(int []pre,int []post){
+        this.root=create(pre,post,0,post.length-1,new Pindex());
+    }
+    private class Pindex{
+        int pindex;
+    }
+    public Node create(int []pre,int []post,int pstart,int pend,Pindex p){
+        if(pstart>pend||p.pindex>=pre.length){
+            return null;
+        }
+        Node newnode=new Node(pre[p.pindex]);
+        p.pindex++;
+        if(p.pindex>=pre.length||pstart==pend){
+            return newnode;
+        }
+        int i;
+        for( i=pstart;i<=pend;i++){
+            if(pre[p.pindex]==post[i]){
+                break;
+            }
+        }
+        if(i<=pend) {
+            newnode.left = create(pre, post, pstart, i, p);
+            newnode.right = create(pre, post, i + 1, pend, p);
+        }
+        return newnode;
+    }
+//    public Node create(int []pre,int []in,int prestart,int preend,int instart,int inend){
+//        if(prestart>preend||instart>inend){
+//            return null;
+//        }
+//        Node newnode=new Node(pre[prestart]);
+//        int searchindex=-1;
+//        for(int i=instart;i<=inend;i++){
+//            if(in[i]==pre[prestart]){
+//                searchindex=i;
+//                break;
+//            }
+//        }
+//        int nel=searchindex-instart;
+//        newnode.left=create(pre,in,prestart+1,prestart+nel,instart,searchindex-1);
+//        newnode.right=create(pre,in,prestart+nel+1,preend,searchindex+1,inend);
+//        return newnode;
+//    }
 
     public Node construct(Scanner scrn, boolean isLeft, Node parent) {
         if (parent == null) {
@@ -527,63 +571,66 @@ public class BinaryTree {
     private class Sum{
         int sum;
     }
-    private void printKdown(Node node, int k) {
-
-        if (node == null) {
+    private void kdown(Node node,int k){
+        if(node==null){
             return;
         }
-
-        if (k == 0) {
-            System.out.println(node.data);
-            return;
+        if(k==0){
+            System.out.print(node.data+" ");
         }
-
-        printKdown(node.left, k - 1);
-        printKdown(node.right, k - 1);
+        kdown(node.left,k-1);
+        kdown(node.right,k-1);
     }
-    public void printKfar(int target, int k) {
-        printKfar(root, target, k);
-
+    public void kfar(int target,int k){
+        kfar(this.root,target,k);
     }
-
-    private int printKfar(Node node, int target, int k) {
-        if (node == null) {
-            return -1;
-        }
-
-
-        if (node.data == target) {
-            printKdown(node, k);
+    private int kfar(Node node,int target,int k){
+        if(node==null){
             return 0;
         }
-
-        int dl = printKfar(node.left, target, k);
-
-        if (dl != -1) {
-            if (dl + 1 == k) {
-                System.out.println(node.data);
-            } else {
-                printKdown(node.right, k - (dl + 2));
-            }
-
-            return dl + 1;
+        if(node.data==target){
+            kdown(node,k);
+            return 0;
         }
-
-        int dr = printKfar(node.right, target, k);
-
-        if (dr != -1) {
-            if (dr + 1 == k) {
-                System.out.println(node.data);
-            } else {
-                printKdown(node.left, k - (dr + 2));
+        int dl=kfar(node.left,target,k);
+        if(dl!=-1){
+            if(dl+1==k){
+                System.out.print(node.data+" ");
+            }else{
+                kdown(node.right,k-dl-2);
             }
-
-            return dr + 1;
+            return dl+1;
         }
-
+        int dr=kfar(node.right,target,k);
+        if(dr!=-1){
+            if(dr+1==k){
+                System.out.println(node.data+" ");
+            }else{
+                kdown(node.left,k-dr-2);
+            }
+            return dr+1;
+        }
         return -1;
     }
-
-
+    public int maxsumpath(){
+        Max m=new Max();
+        m.max=Integer.MIN_VALUE;
+        maxsumpath(this.root,m);
+        return m.max;
+    }
+    private int maxsumpath(Node node, Max m){
+        if(node==null){
+          return 0;
+        }
+        int left=maxsumpath(node.left,m);
+        int right=maxsumpath(node.right,m);
+        int maxSingleChild=Math.max(Math.max(left,right)+node.data,node.data);
+        int withroot=Math.max(node.data+left+right,maxSingleChild);
+        m.max=Math.max(m.max,withroot);
+        return maxSingleChild;
+    }
+    private class Max{
+        int max;
+    }
 
 }
