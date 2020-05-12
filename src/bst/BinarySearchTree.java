@@ -90,7 +90,7 @@ public class BinarySearchTree {
             this.size++;
             return newnode;
         }
-        if(data>=node.data){
+        if(data>node.data){
             node.right=add(node.right,data);
         }
         else{
