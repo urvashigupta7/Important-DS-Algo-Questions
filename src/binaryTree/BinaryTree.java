@@ -542,7 +542,7 @@ public class BinaryTree {
         LargestBSTHelper left=largestBSTHelper(node.left);
         LargestBSTHelper right=largestBSTHelper(node.right);
         LargestBSTHelper mr=new LargestBSTHelper();
-        mr.min=Math.min(left.min,Math.max(right.min,node.data));
+        mr.min=Math.min(left.min,Math.min(right.min,node.data));
         mr.max=Math.max(left.max,Math.max(right.max,node.data));
         mr.size=left.size+right.size+1;
         if(left.isBST&&right.isBST&&node.data>left.max &&node.data<right.min){
