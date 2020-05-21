@@ -24,9 +24,6 @@ public class SimpleFraction {
                     rem=rem*10;
                     r.append(Integer.toString(rem / D));
                     rem=rem%D;
-                    if(map.containsKey(rem)){
-                        break;
-                    }
                     i++;
                 }
                 if(map.containsKey(rem)){
