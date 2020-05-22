@@ -228,5 +228,156 @@ public class Graph {
         }
         return true;
     }
+    private class PrimHelper implements Comparable<PrimHelper>{
+        int cost;
+        Character acquirer;
+        Character vertex;
+        public PrimHelper(int c,Character a,Character v){
+            this.cost=c;
+            this.acquirer=a;
+            this.vertex=v;
+        }
 
+        @Override
+        public int compareTo(PrimHelper primHelper) {
+            return this.cost-primHelper.cost;
+        }
+    }
+    public Graph mst(){
+        HashMap<Character,PrimHelper>map=new HashMap<>();
+        PriorityQueue<PrimHelper>minheap=new PriorityQueue<>();
+        Graph rv=new Graph();
+        Set<Character>allvertices=vertices.keySet();
+        for(Character v:allvertices){
+            PrimHelper p=new PrimHelper(Integer.MAX_VALUE,null,v);
+            map.put(v,p);
+            minheap.offer(p);
+        }
+        while(!minheap.isEmpty()){
+            PrimHelper curr=minheap.poll();
+            rv.addVertex(curr.vertex);
+            map.remove(curr.vertex);
+            if(curr.acquirer!=null){
+                rv.addEdge(curr.vertex,curr.acquirer,curr.cost);
+            }
+            Set<Character>nbrsofcurr=vertices.get(curr.vertex).keySet();
+            for(Character nbr:nbrsofcurr){
+                if(map.containsKey(nbr)){
+                    PrimHelper nbrprimhelper=map.get(nbr);
+                    int oldcost=nbrprimhelper.cost;
+                    int newcost=vertices.get(curr.vertex).get(nbr);
+                    if(oldcost>newcost){
+                        minheap.remove(nbrprimhelper);
+                        nbrprimhelper.acquirer=curr.vertex;
+                        nbrprimhelper.cost=newcost;
+                        minheap.offer(nbrprimhelper);
+                    }
+                }
+            }
+        }
+        return rv;
+    }
+    public void dijkstra(Character source){
+        HashMap<Character,PrimHelper>map=new HashMap<>();
+        PriorityQueue<PrimHelper>minheap=new PriorityQueue<>();
+        Set<Character>allvertices=vertices.keySet();
+        for(Character v:allvertices){
+            PrimHelper p;
+            if(v==source){
+                p=new PrimHelper(0,null,v);
+            }else{
+                p=new PrimHelper(Integer.MAX_VALUE,null,v);
+            }
+            minheap.offer(p);
+            map.put(v,p);
+        }
+        while(!minheap.isEmpty()){
+            PrimHelper curr=minheap.poll();
+            map.remove(curr.vertex);
+            System.out.println(curr.vertex+" "+curr.cost);
+            Set<Character>nbrsofcurr=vertices.get(curr.vertex).keySet();
+            for(Character nbr:nbrsofcurr){
+                if(map.containsKey(nbr)){
+                    PrimHelper nbrprimhelper=map.get(nbr);
+                    int oldcost=nbrprimhelper.cost;
+                    int newcost=vertices.get(curr.vertex).get(nbr)+curr.cost;
+                    if(oldcost>newcost){
+                        minheap.remove(nbrprimhelper);
+                        nbrprimhelper.acquirer=curr.vertex;
+                        nbrprimhelper.cost=newcost;
+                        minheap.offer(nbrprimhelper);
+                    }
+                }
+            }
+        }
+    }
+    private class Edge implements Comparable<Edge>{
+        Character start;
+        Character end;
+        int weight;
+        public Edge(Character s,Character e,int w){
+            start=s;
+            end=e;
+            weight=w;
+        }
+
+        @Override
+        public int compareTo(Edge edge) {
+            return this.weight-edge.weight;
+        }
+    }
+    public Graph kruskal(){
+        ArrayList<Edge>al=new ArrayList<>();
+        Set<Character>allvertices=vertices.keySet();
+        for(Character v:allvertices){
+            Set<Character>nbrs=vertices.get(v).keySet();
+            for(Character nbr:nbrs){
+                Edge e=new Edge(v,nbr,vertices.get(v).get(nbr));
+                al.add(e);
+            }
+        }
+        Collections.sort(al);
+        HashMap<Character,Character>parents=generateParents();
+        HashMap<Character,Boolean>visited=new HashMap<>();
+        Graph rv=new Graph();
+        for(int i=0;i<al.size();i+=2){
+            Edge e = al.get(i);
+            if(union(e.start,e.end,parents)){
+                if(!visited.containsKey(e.start)){
+                    visited.put(e.start,true);
+                    rv.addVertex(e.start);
+                }
+                if(!visited.containsKey(e.end)){
+                    visited.put(e.end,true);
+                    rv.addVertex(e.end);
+                }
+                rv.addEdge(e.start,e.end,e.weight);
+            }
+        }
+        return rv;
+    }
+    private HashMap<Character,Character>generateParents(){
+        Set<Character>allvertices=vertices.keySet();
+        HashMap<Character,Character>p=new HashMap<>();
+        for(Character v:allvertices){
+            p.put(v,null);
+        }
+        return p;
+    }
+    private Character find(Character vertex,HashMap<Character,Character>p){
+        while(p.get(vertex)!=null){
+            vertex=p.get(vertex);
+        }
+        return vertex;
+    }
+    private boolean union(Character v1,Character v2,HashMap<Character,Character>p){
+        v1=find(v1,p);
+        v2=find(v2,p);
+        if(v1!=v2){
+            p.put(v1,v2);
+            return true;
+        }else{
+            return false;
+        }
+    }
 }

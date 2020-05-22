@@ -28,5 +28,10 @@ public class Client {
         g.dft();
         System.out.println(g.isCyclic());
         System.out.println(g.isBipartite());
+        Graph mst=g.mst();
+        mst.display();
+        g.dijkstra('A');
+        Graph kruskal=g.kruskal();
+        kruskal.display();
     }
 }
