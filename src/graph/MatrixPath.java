@@ -98,7 +98,6 @@ class graph{
                 }
             }
         }
-        System.out.println(vertices);
         return false;
     }
     public boolean containsEdge(int v1,int v2){
