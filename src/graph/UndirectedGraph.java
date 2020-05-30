@@ -76,4 +76,3 @@ public class UndirectedGraph {
         ug.printSCC();
     }
 }
-        UndirectedGraph transposeGraph=createTransposeGraph();
