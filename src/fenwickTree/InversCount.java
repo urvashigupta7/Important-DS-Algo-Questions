@@ -1,4 +1,4 @@
-package FenwickTree;
+package fenwickTree;
 
 import java.util.Scanner;
 

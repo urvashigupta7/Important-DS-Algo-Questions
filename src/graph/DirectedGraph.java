@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Stack;
 
-public class UndirectedGraph {
+public class DirectedGraph {
     int V;
     ArrayList<ArrayList<Integer>>vertices=new ArrayList<>();
-    public UndirectedGraph(int v){
+    public DirectedGraph(int v){
         this.V=v;
         for(int i=0;i<v;i++){
             vertices.add(new ArrayList<>());
@@ -24,7 +24,7 @@ public class UndirectedGraph {
                 fill(i,st,visited);
             }
         }
-        UndirectedGraph transposeGraph=createTransposeGraph();
+        DirectedGraph transposeGraph=createTransposeGraph();
         Arrays.fill(visited,false);
         while (!st.isEmpty()){
             int curr=st.pop();
@@ -35,7 +35,7 @@ public class UndirectedGraph {
         }
 
     }
-    private void dfs(int curr,boolean []visited,UndirectedGraph tg){
+    private void dfs(int curr, boolean []visited, DirectedGraph tg){
         visited[curr]=true;
         System.out.print(curr+" ");
         ArrayList<Integer>nbrs=tg.vertices.get(curr);
@@ -55,8 +55,8 @@ public class UndirectedGraph {
         }
         st.push(v);
     }
-    private UndirectedGraph createTransposeGraph(){
-        UndirectedGraph g=new UndirectedGraph(V);
+    private DirectedGraph createTransposeGraph(){
+        DirectedGraph g=new DirectedGraph(V);
         for(int i=0;i<V;i++){
             ArrayList<Integer>nbrs=vertices.get(i);
             for(Integer nbr:nbrs){
@@ -67,7 +67,7 @@ public class UndirectedGraph {
     }
 
     public static void main(String[] args) {
-        UndirectedGraph ug=new UndirectedGraph(5);
+        DirectedGraph ug=new DirectedGraph(5);
         ug.addEdge(1, 0);
         ug.addEdge(0, 2);
         ug.addEdge(2, 1);

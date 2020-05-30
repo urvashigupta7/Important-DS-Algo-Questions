@@ -1,4 +1,4 @@
-package Searching;
+package searching;
 
 public class SortedAndRotated {
     public static void main(String[] args) {
