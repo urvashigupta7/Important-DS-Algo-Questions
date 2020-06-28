@@ -4,7 +4,7 @@ import java.util.Arrays;
 public class RecursionPractice {
     public static void main(String[] args) {
          printperms("abc","");
-         ArrayList<String>res=permutaion("abc");
+         ArrayList<String>res=permutaion("123");
         System.out.println(res);
         int []a={8,4,2,-3,-8};
         bubbleSort(0,0,a);
